@@ -16,38 +16,38 @@ O analisador léxico reconhece:
 
 *  **Palavras reservadas**
 
-  * Ex: `int`, `main`, `printf`, `scanf`, `return`
+    * Ex: `int`, `main`, `printf`, `scanf`, `return`
 
 *  **Identificadores**
 
-  * Ex: `x`, `contador`, `aluno1`, `_teste`
+    * Ex: `x`, `contador`, `aluno1`, `_teste`
 
 *  **Números inteiros positivos**
 
-  * Ex: `10`, `42`, `0`
-  * Detecta erro em casos inválidos como: `34a56`
+    * Ex: `10`, `42`, `0`
+    * Detecta erro em casos inválidos como: `34a56`
 
 *  **Operadores**
 
-  * Simples: `+`, `-`, `*`, `/`, `=`, `<`, `>`
-  * Compostos: `==`, `!=`, `<=`, `>=`, `&&`, `||`, `++`, `--`, `+=`, etc.
-  * Detecta operadores inválidos como: `=+`
-  * Não permite `&` ou `|` isolados
+    * Simples: `+`, `-`, `*`, `/`, `=`, `<`, `>`
+    * Compostos: `==`, `!=`, `<=`, `>=`, `&&`, `||`, `++`, `--`, `+=`, etc.
+    * Detecta operadores inválidos como: `=+`
+    * Não permite `&` ou `|` isolados
 
 *  **Literais (strings)**
 
-  * Ex: `"Hello World"`
-  * Detecta erro de string não fechada
+    * Ex: `"Hello World"`
+    * Detecta erro de string não fechada
 
 * **Comentários**
 
-  * Linha: `// comentário`
-  * Bloco: `/* comentário */`
-  * Detecta comentário de bloco não fechado
+    * Linha: `// comentário`    
+    * Bloco: `/* comentário */`
+    * Detecta comentário de bloco não fechado
 
 * **Separadores**
 
-  * `(` `)` `{` `}` `;` `,` `[` `]` ` ` `   ` `\n`
+    * `(` `)` `{` `}` `;` `,` `[` `]` ` ` `   ` `\n`
 
 ---
 
@@ -131,10 +131,10 @@ python analisador_lexico.py
 
 Este projeto faz parte da construção de um compilador completo. As próximas fases incluem:
 
-* 🔹 Análise Sintática 
-* 🔹 Análise Semântica
-* 🔹 Otimizações
-* 🔹 Geração de Código 
+* Análise Sintática 
+* Análise Semântica
+* Otimizações
+* Geração de Código 
 
 ---
 
