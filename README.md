@@ -34,18 +34,18 @@ O analisador léxico reconhece:
   * Detecta operadores inválidos como: `=+`
   * Não permite `&` ou `|` isolados
 
-* 🔹 **Literais (strings)**
+*  **Literais (strings)**
 
   * Ex: `"Hello World"`
   * Detecta erro de string não fechada
 
-* 🔹 **Comentários**
+* **Comentários**
 
   * Linha: `// comentário`
   * Bloco: `/* comentário */`
   * Detecta comentário de bloco não fechado
 
-* 🔹 **Separadores**
+* **Separadores**
 
   * `(` `)` `{` `}` `;` `,` `[` `]` ` ` `   ` `\n`
 
