@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 int main(){
     int bvwi;
     printf("Hello World!\n");
@@ -13,4 +11,9 @@ int main(){
     int x = -2;
     ajuda 3874+a;
     int + a; 0 3 $ << )(;
+    printf("teste \"oi\"");
+    "Linha 1
+    linha 2"
+    int x = 10; /* comentário */ int y = 20;
+    3.14 5.3 1.
 }

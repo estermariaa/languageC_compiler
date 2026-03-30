@@ -53,11 +53,23 @@ def ler_numero(arquivo, i, linha, coluna):
     while i<len(arquivo) and arquivo[i].isdigit():
         i += 1
         coluna += 1
+
+    # Parte decimal
+    if i < len(arquivo) and arquivo[i] == ".":
+        i += 1
+        coluna += 1
+
+        # Deve ter pelo menos um dígito depois do ponto
+        if i < len(arquivo) and arquivo[i].isdigit():
+            while i < len(arquivo) and arquivo[i].isdigit():
+                i += 1
+                coluna += 1
+        else:
+            valor = arquivo[inicio:i]
+            return ("ERRO", valor, linha, col_inicio, i, coluna)
     
     # Número seguido de letra
     if i < len(arquivo) and re.match(r"[A-Za-z_]", arquivo[i]):
-        inicio_erro = i
-
         while i < len(arquivo) and re.match(r"[A-Za-z0-9_]", arquivo[i]):
             i += 1
             coluna += 1
