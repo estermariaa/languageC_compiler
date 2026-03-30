@@ -1,0 +1,7 @@
+ERRO       #          (linha 1, coluna 1)
+ERRO       .          (linha 1, coluna 15)
+ERRO       @          (linha 7, coluna 15)
+ERRO       =+         (linha 7, coluna 22)
+ERRO       34ab56     (linha 11, coluna 5)
+ERRO       &          (linha 11, coluna 12)
+ERRO       $          (linha 15, coluna 18)

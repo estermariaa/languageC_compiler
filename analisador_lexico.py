@@ -1,12 +1,11 @@
 import re
 
 # DEFINIÇÃO DAS CLASSES:
-PALAVRAS_RESERVADAS = ["int", "main", "printf", "scanf", "return"]
+PALAVRAS_RESERVADAS = ["int", "main", "printf", "scanf", "return", "include"]
 NUMERAIS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-COMENTARIOS = ["/", "*"]
 LITERAIS = ["'", '"']
 OPERADORES = ["+", "-", "/", "*", "&&", "||", ">", "<", "=", "!", "%"]
-SEPARADORES = [" ", "\n", "(", ")", "{", "}", ";", ","]
+SEPARADORES = [" ", "\n", "(", ")", "{", "}", ";", ",", "[", "]"]
 
 # FUNÇÕES AUXILIARES
 def eh_letra(char):
@@ -23,7 +22,7 @@ def eh_operador(char):
 
 def eh_separador(char):
     # Verifica se é separador (espaço, quebra de linha, etc)
-    return char in [" ", "\n", "(", ")", "{", "}", ";", ","]
+    return char in SEPARADORES
 
 def eh_aspas(char):
     # Verifica se é início de string
@@ -54,6 +53,18 @@ def ler_numero(arquivo, i, linha, coluna):
     while i<len(arquivo) and arquivo[i].isdigit():
         i += 1
         coluna += 1
+    
+    # Número seguido de letra
+    if i < len(arquivo) and re.match(r"[A-Za-z_]", arquivo[i]):
+        inicio_erro = i
+
+        while i < len(arquivo) and re.match(r"[A-Za-z0-9_]", arquivo[i]):
+            i += 1
+            coluna += 1
+
+        valor = arquivo[inicio: i]
+
+        return ("ERRO", valor, linha, col_inicio, i, coluna)
 
     return ("NUMERAL", arquivo[inicio:i], linha, col_inicio, i, coluna)
 
@@ -63,75 +74,88 @@ def ler_operador(arquivo, i, linha, coluna):
     # Verifica se é operador de dois caracteres
     if i+1 < len(arquivo):
         dois = arquivo[i:i+2]
-        if dois in ["==", "!=", "<=", ">=", "&&", "||", "++", "--"]:
+
+        # Erro léxico:
+        if dois in ["=+", "=-", "=/", "=*", "=>", "=<", "=!"]:
+            return ("ERRO", dois, linha, col_inicio, i+2, coluna+2)
+
+        if dois in ["==", "!=", "<=", ">=", "&&", "||", "++", "--", "+=", "-=", "*=", "/=", "%="]:
             return ("OPERADOR", dois, linha, col_inicio, i+2, coluna+2)
 
+    if arquivo[i] in ["&", "|"]:
+        return ("ERRO", arquivo[i], linha, col_inicio, i+1, coluna+1)
+    
     # Se não for é operador simples
     return ("OPERADOR", arquivo[i], linha, col_inicio, i+1, coluna+1)
 
 def ler_literal(arquivo, i, linha, coluna):
-    # Verifica qual tipo de aspas iniciou o literal
     aspas = arquivo[i]
     col_inicio = coluna
 
-    # Avança para dentro do literal
     i += 1
     coluna += 1
     inicio = i
 
-    # Lê até achar a mesma aspas 
-    while i<len(arquivo) and arquivo[i] != aspas:
+    while i < len(arquivo):
+        if arquivo[i] == aspas:
+            conteudo = arquivo[inicio:i]
+            i += 1
+            coluna += 1
+            return ("LITERAL", conteudo, linha, col_inicio, i, coluna)
+
         if arquivo[i] == "\n":
             linha += 1
             coluna = 1
         else:
             coluna += 1
+
         i += 1
 
-    conteudo = arquivo[inicio:i]
-    i += 1
-    coluna += 1
-
-    return ("LITERAL", conteudo, linha, col_inicio, i, coluna)
+    # string não fechada
+    return ("ERRO", "string não fechada", linha, col_inicio, i, coluna)
 
 def ler_comentario(arquivo, i, linha, coluna):
     col_inicio = coluna
 
     # Comentário de linha
-    if arquivo[i:i+2] == "//":
+    if i + 1 < len(arquivo) and arquivo[i:i+2] == "//":
         i += 2
         coluna += 2
         inicio = i
 
-        # Vai até o fim da linha
-        while i<len(arquivo) and arquivo[i] != "\n":
+        while i < len(arquivo) and arquivo[i] != "\n":
             i += 1
             coluna += 1
 
         return ("COMENTARIO", arquivo[inicio:i], linha, col_inicio, i, coluna)
 
     # Comentário de bloco
-    elif arquivo[i:i+2] == "/*":
+    elif i + 1 < len(arquivo) and arquivo[i:i+2] == "/*":
         i += 2
         coluna += 2
         inicio = i
 
-        # Procuroa */
-        while i+1 < len(arquivo) and arquivo[i:i+2] != "*/":
+        while i+1 < len(arquivo):
+            if arquivo[i:i+2] == "*/":
+                conteudo = arquivo[inicio:i]
+                i += 2
+                coluna += 2
+                return ("COMENTARIO", conteudo, linha, col_inicio, i, coluna)
+
             if arquivo[i] == "\n":
                 linha += 1
                 coluna = 1
             else:
                 coluna += 1
+
             i += 1
 
-        # Pula o */
-        i += 2
-        coluna += 2
-
-        return ("COMENTARIO", arquivo[inicio:i], linha, col_inicio, i, coluna)
+        # comentário não fechado
+        return ("ERRO", "comentário não fechado", linha, col_inicio, i, coluna)
 
     return None
+
+
 
 def main():
     with open("codigo_entrada.c", "r") as file:
@@ -141,6 +165,7 @@ def main():
     coluna = 1
     i = 0
     tokens = []
+    erros = []
 
     while i < len(arquivo):
         char = arquivo[i]   
@@ -160,13 +185,23 @@ def main():
 
         elif eh_digito(char):
             token = ler_numero(arquivo, i, linha, coluna)
-            tokens.append(token[:4])
+
+            if token[0] == "ERRO":
+                erros.append(token[:4])
+            else:
+                tokens.append(token[:4])
+
             i = token[4]
             coluna = token[5]
 
         elif eh_aspas(char):
             token = ler_literal(arquivo, i, linha, coluna)
-            tokens.append(token[:4])
+
+            if token[0] == "ERRO":
+                erros.append(token[:4])
+            else:
+                tokens.append(token[:4])
+
             i = token[4]
             linha = token[2]
             coluna = token[5]
@@ -175,7 +210,11 @@ def main():
             resultado = ler_comentario(arquivo, i, linha, coluna)
 
             if resultado:
-                tokens.append(resultado[:4])
+                if resultado[0] == "ERRO":
+                    erros.append(resultado[:4])
+                else:
+                    tokens.append(resultado[:4])
+
                 i = resultado[4]
                 linha = resultado[2]
                 coluna = resultado[5]
@@ -183,24 +222,34 @@ def main():
 
         elif eh_operador(char):
             token = ler_operador(arquivo, i, linha, coluna)
-            tokens.append(token[:4])
+            if token[0] == "ERRO":
+                erros.append(token[:4])  
+            else:
+                tokens.append(token[:4])
+
             i = token[4]
             coluna = token[5]
 
         elif eh_separador(char):
+            if char != " ":
+                tokens.append(("SEPARADOR", char, linha, coluna))
             i += 1
             coluna += 1
 
         # Erro léxico
         else:
-            print(f"Erro: caractere inválido {char}")
+            erros.append(("ERRO", char, linha, coluna)) 
             i += 1
 
+    print("\n")
     print(tokens)
 
     with open("tokens.txt", "w") as f:
         for classe, valor, linha, coluna in tokens:
-            f.write(f"{classe:15} {valor:10} (linha {linha}, coluna {coluna})\n")
+            f.write(f"{classe:15} {valor:15} (linha {linha}, coluna {coluna})\n")
 
+    with open("erros.txt", "w") as f:
+        for classe, valor, linha, coluna in erros:
+            f.write(f"{classe:10} {valor:10} (linha {linha}, coluna {coluna})\n")
 
 main()
