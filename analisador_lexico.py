@@ -1,10 +1,7 @@
 import re
 
 # DEFINIÇÃO DAS CLASSES:
-PALAVRAS_RESERVADAS = ["int", "main", "printf", "scanf", "return", "include"]
-NUMERAIS = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-LITERAIS = ["'", '"']
-OPERADORES = ["+", "-", "/", "*", "&&", "||", ">", "<", "=", "!", "%"]
+PALAVRAS_RESERVADAS = ["int", "main", "printf", "scanf", "return", "include", "for", "while", "if", "else"]
 SEPARADORES = [" ", "\n", "(", ")", "{", "}", ";", ",", "[", "]"]
 
 # FUNÇÕES AUXILIARES
@@ -21,11 +18,10 @@ def eh_operador(char):
     return char in ["+", "-", "/", "*", ">", "<", "=", "!", "%", "&", "|"]
 
 def eh_separador(char):
-    # Verifica se é separador (espaço, quebra de linha, etc)
     return char in SEPARADORES
 
 def eh_aspas(char):
-    # Verifica se é início de string
+    # Verifica se é início de literal
     return char in ("'", '"')
 
 # FUNÇÕES DE LEITURA DE TOKENS
@@ -170,7 +166,7 @@ def ler_comentario(arquivo, i, linha, coluna):
 
 
 def main():
-    with open("codigo_entrada.c", "r") as file:
+    with open("teste_sintatico.c", "r") as file:
         arquivo = file.read()
 
     linha = 1
@@ -256,11 +252,11 @@ def main():
     print("\n")
     print(tokens)
 
-    with open("tokens.txt", "w") as f:
+    with open("lista_de_tokens_2.txt", "w") as f:
         for classe, valor, linha, coluna in tokens:
             f.write(f"{classe:15} {valor:15} (linha {linha}, coluna {coluna})\n")
 
-    with open("erros.txt", "w") as f:
+    with open("erros_lexicos_2.txt", "w") as f:
         for classe, valor, linha, coluna in erros:
             f.write(f"{classe:10} {valor:10} (linha {linha}, coluna {coluna})\n")
 
