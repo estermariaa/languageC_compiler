@@ -1,7 +1,7 @@
 import re
 
 # DEFINIÇÃO DAS CLASSES:
-PALAVRAS_RESERVADAS = ["int", "main", "printf", "scanf", "return", "include", "for", "while", "if", "else"]
+PALAVRAS_RESERVADAS = ["int", "float", "char", "double", "main", "printf", "scanf", "return", "include", "for", "while", "if", "else"]
 SEPARADORES = [" ", "\n", "(", ")", "{", "}", ";", ",", "[", "]"]
 
 # FUNÇÕES AUXILIARES
@@ -166,7 +166,7 @@ def ler_comentario(arquivo, i, linha, coluna):
 
 
 def main():
-    with open("teste_sintatico.c", "r") as file:
+    with open("teste_sintatico_semantico.c", "r") as file:
         arquivo = file.read()
 
     linha = 1
