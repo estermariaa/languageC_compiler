@@ -337,6 +337,11 @@ def parser(tokens_lexico, tabela_ll1, terminais, conjuntos_follow):
                             # Guardar float em int
                             elif tipo_alvo == "int" and tipo_expressao in ["float", "double"]:
                                 print(f"WARNING DE TIPO [L:{linha_atual}]: Conversão implícita. Guardando '{tipo_expressao}' na variável 'int' ('{alvo_atribuicao}'). Haverá perda das casas decimais.")
+                           
+        
+                            # Guardar double em float (Perda de precisão)
+                            elif tipo_alvo == "float" and tipo_expressao == "double":
+                                print(f"WARNING DE TIPO [L:{linha_atual}]: Conversão implícita. Guardando 'double' na variável 'float' ('{alvo_atribuicao}'). Pode haver perda de precisão.")
             pilha.pop() 
             continue
         
