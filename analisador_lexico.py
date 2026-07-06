@@ -166,7 +166,7 @@ def ler_comentario(arquivo, i, linha, coluna):
 
 
 def main():
-    with open("teste_sintatico_semantico.c", "r") as file:
+    with open("teste_gerador.c", "r") as file:
         arquivo = file.read()
 
     linha = 1
@@ -252,11 +252,11 @@ def main():
     print("\n")
     print(tokens)
 
-    with open("lista_de_tokens_2.txt", "w") as f:
+    with open("lista_de_tokens_3.txt", "w") as f:
         for classe, valor, linha, coluna in tokens:
             f.write(f"{classe:15} {valor:15} (linha {linha}, coluna {coluna})\n")
 
-    with open("erros_lexicos_2.txt", "w") as f:
+    with open("erros_lexicos_3.txt", "w") as f:
         for classe, valor, linha, coluna in erros:
             f.write(f"{classe:10} {valor:10} (linha {linha}, coluna {coluna})\n")
 
